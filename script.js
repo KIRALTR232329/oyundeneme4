@@ -17,7 +17,7 @@ let Questions = [
     {
         soru: "Bir hücrede hangisinin olması onun bitki hücresi olduğunu gösterir?",
         cevaplar: ["Hücre çeperi", "Loroplast", "Nişasta", "Sentrozom"],
-        doğru: "A"
+        doğru: "C"
     },
     {
         soru: "Böceklerin kaç bacağı vardır?",
@@ -25,6 +25,11 @@ let Questions = [
         doğru: "B"
     },
     {
+        soru: "Aşağıdakilerden hangisi fotosentez yapmaz?",
+        cevaplar: ["Alg", "Çam ağacı", "Şapkalı mantar", "Gül bitkisi"], 
+        doğru: "C"
+    },
+    
         soru: "Hangisi omurgalı bir canlıdır?",
         cevaplar: ["Deniz anası", "Midye", "Kaplumbağa", "Yengeç"],
         doğru: "C"
@@ -114,6 +119,51 @@ let Questions = [
         soru: "Hangi organ sistemi vücutta oksijen taşınmasını sağlar?",
         cevaplar: ["Sindirim sistemi", "Dolaşım sistemi", "Solunum sistemi", "Boşaltım sistemi"],
         doğru: "C"
+    },
+    {
+        soru: "Aşağıdakilerden hangisi bir bakteri tarafından yapılamaz?",
+        cevaplar: ["Yoğurdun mayalanması", "Hamurun mayalanması", "Kemosentezle besin üretilmesi", "Fotosentezle besin üretilmesi"],
+        doğru: "B"
+    },
+    {
+        soru: "Midenin etrafını hangisi örter?",
+        cevaplar: ["Periton", "Plevra", "Pseudepod", "Perikard"],
+        doğru: "A"
+    },
+    {
+        soru: "Bir insanda bacağın diz altında, arka kısmında bulunan kemiğin adı nedir?",
+        cevaplar: ["Baldır", "Pazı", "Köprücük", "Tırnakçık"],
+        doğru: "A"
+    },
+    {
+        soru: "Bir insan vücudunda amonyağın üreye çevrildiği organ hangisidir?",
+        cevaplar: ["Kalp", "Bağırsak", "Böbrek", "Karaciğer"],
+        doğru: "D"
+    },
+    {
+        soru: "Fotosentezde hangisi üretilemez?",
+        cevaplar: ["Karbondioksit", "Glikoz", "Oksijen", "Vitamin"],
+        doğru: "A"
+    },
+    {
+        soru: "Enzimlerin üretildiği organel hangisidir?",
+        cevaplar: ["Golgi", "Ribozom", "Lizozom", "Koful"],
+        doğru: "B"
+    },
+    {
+        soru: "Aşağıdaki canlılardan hangisi konjugasyon yapar ve bu sırada canlı sayısı artar?",
+        cevaplar: ["Bakteri", "Paramecium", "Amip", "Sığırcık kuşu"],
+        doğru: "B"
+    },
+    {
+        soru: "Aşağıdaki canlılardan hangisinin vücudu tüylerle örtülüdür?",
+        cevaplar: ["Kuzu", "Güvercin", "Maymun", "Köpek"],
+        doğru: "B"
+    },
+    {
+        soru: "Fosil bilimine ne denir?",
+        cevaplar: ["Paleontoloji", "Fizyoloji", "Zooloji", "Taksonomi"],
+        doğru: "A"
     }
 ];
 
