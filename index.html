@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oyunun Adı</title>
-    <link rel="stylesheet" href="style.css"> <!-- CSS dosyanızın adı -->
+    <title>🧠 Bilgi Yarışması - Zeka Oyunu</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
 </head>
 <body>
     <div id="container">
         <!-- Skor Tablosu -->
         <div id="score-board">
-            <h2>En Yüksek Skorlar</h2>
+            <h2>🏆 En Yüksek Skorlar</h2>
             <ol id="high-score-list">
                 <!-- Skorlar burada listelenecek -->
             </ol>
@@ -19,43 +21,43 @@
         <!-- Oyun Alanı -->
         <div id="game-area">
             <div id="mainMenu">
-                <h1>Hoş Geldiniz!</h1>
-                <button class="menuButton" id="start-game">Oyuna Başla</button>
+                <h1>🎯 Bilgi Yarışmasına Hoş Geldiniz!</h1>
+                <p>10 sorudan oluşan bu bilgi yarışmasında kendinizi test edin!</p>
+                <button class="menuButton" id="start-game">🚀 Oyuna Başla</button>
             </div>
             <div id="question-container" style="display: none;"></div>
             <div id="info-column" style="display: none;">
-                <h2>Puan: <span id="player-score">0</span></h2>
+                <h2>💎 Puan: <span id="player-score">0</span></h2>
                 <div id="countdown-container">
                     <svg id="countdown-circle" width="100" height="100" viewBox="0 0 100 100">
                         <circle r="45" cx="50" cy="50" fill="none" stroke="#4CAF50" stroke-width="4" stroke-dasharray="283" stroke-dashoffset="0"></circle>
                         <text id="countdown-text" x="50" y="55" text-anchor="middle" fill="#333" font-size="20px">30</text>
                     </svg>
                 </div>
-                <button id="ask-friend" class="menuButton" style="display: none;">Arkadaşına Sor</button>
+                <button id="ask-friend" class="jokerButton" style="display: none;">🎯 Arkadaşına Sor</button>
             </div>
             <!-- Oyun Sonucu Sütunu -->
             <div id="result-container" style="display: none; text-align: center;">
                 <h2 id="result-message">Oyun Bitti!</h2>
                 <p id="score-message">Puanınız: <span id="final-score">0</span></p>
-                <input type="text" id="player-name" placeholder="Adınızı girin">
-                <button id="save-score" class="menuButton">Skoru Kaydet</button>
-                <button id="restart-game" class="menuButton">Baştan Başla</button>
-                <button id="go-home" class="menuButton">Ana Sayfaya Dön</button>
+                <input type="text" id="player-name" placeholder="Adınızı girin" maxlength="20">
+                <button id="save-score" class="menuButton">💾 Skoru Kaydet</button>
+                <button id="restart-game" class="menuButton">🔄 Baştan Başla</button>
+                <button id="go-home" class="menuButton">🏠 Ana Sayfaya Dön</button>
                 <div id="save-score-container" style="display: none;">
                     <span id="save-score-message"></span>
-                    <input type="text" id="player-name-input" placeholder="Adınızı girin">
-                    <button id="save-score-btn" class="menuButton">Skoru Kaydet</button>
+                    <input type="text" id="player-name-input" placeholder="Adınızı girin" maxlength="20">
+                    <button id="save-score-btn" class="menuButton">💾 Skoru Kaydet</button>
                 </div>
-                
-            </div> 
-                   <div id="save-score-container" style="display: none;">
-    <span id="save-score-message"></span>
-    <input type="text" id="player-name-input" placeholder="Adınızı girin">
-    <button id="save-score-btn" class="menuButton">Skoru Kaydet</button>
-</div>
-    
             </div>
+        </div>
     </div>
-    <script src="script.js"></script> <!-- JavaScript dosyanızın adı -->
+    
+    <!-- Ses kontrol paneli -->
+    <div id="sound-controls">
+        <button id="mute-button" class="sound-btn">🔊</button>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>

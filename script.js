@@ -29,7 +29,7 @@ let Questions = [
         cevaplar: ["Alg", "Çam ağacı", "Şapkalı mantar", "Gül bitkisi"], 
         doğru: "C"
     },
-    
+    {
         soru: "Hangisi omurgalı bir canlıdır?",
         cevaplar: ["Deniz anası", "Midye", "Kaplumbağa", "Yengeç"],
         doğru: "C"
@@ -174,6 +174,55 @@ let isExtended = false;
 let playerScore = 0;
 let startTime;
 let endTime;
+let selectedQuestions = [];
+let isSoundEnabled = true;
+
+// Ses dosyalarını tanımla
+var dogruCevapSesi = new Audio('sounds/dogruCevapSesi.mp3');
+var girisSesi = new Audio('sounds/girisSesi.mp3');
+var sonSorudakiDogruCevapSesi = new Audio('sounds/sonSorudakiDogruCevapSesi.mp3');
+var soruBaslangicSesi = new Audio('sounds/soruBaslangicSesi.mp3');
+var yanlisCevapSesi = new Audio('sounds/yanlisCevapSesi.mp3');
+
+// Ses dosyalarını optimize et
+[dogruCevapSesi, girisSesi, sonSorudakiDogruCevapSesi, soruBaslangicSesi, yanlisCevapSesi].forEach(audio => {
+    audio.volume = 0.7;
+    audio.preload = 'auto';
+});
+
+// Ses kontrol butonu
+document.addEventListener('DOMContentLoaded', function() {
+    const muteButton = document.getElementById('mute-button');
+    if (muteButton) {
+        muteButton.addEventListener('click', toggleSound);
+    }
+});
+
+function toggleSound() {
+    isSoundEnabled = !isSoundEnabled;
+    const muteButton = document.getElementById('mute-button');
+    muteButton.textContent = isSoundEnabled ? '🔊' : '🔇';
+    
+    if (!isSoundEnabled) {
+        [dogruCevapSesi, girisSesi, sonSorudakiDogruCevapSesi, soruBaslangicSesi, yanlisCevapSesi].forEach(audio => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+    }
+}
+
+// Ses dosyalarını tanımla
+var dogruCevapSesi = new Audio('sounds/dogruCevapSesi.mp3');
+var girisSesi = new Audio('sounds/girisSesi.mp3');
+var sonSorudakiDogruCevapSesi = new Audio('sounds/sonSorudakiDogruCevapSesi.mp3');
+var soruBaslangicSesi = new Audio('sounds/soruBaslangicSesi.mp3');
+var yanlisCevapSesi = new Audio('sounds/yanlisCevapSesi.mp3');
+
+// Ses dosyalarını optimize et
+[dogruCevapSesi, girisSesi, sonSorudakiDogruCevapSesi, soruBaslangicSesi, yanlisCevapSesi].forEach(audio => {
+    audio.volume = 0.7; // Ses seviyesini ayarla
+    audio.preload = 'auto'; // Ses dosyalarını önceden yükle
+});
 
 document.getElementById('start-game').addEventListener('click', startGame);
 document.getElementById('restart-game').addEventListener('click', startGame);
@@ -185,6 +234,10 @@ function startGame() {
     document.getElementById('result-container').style.display = 'none';
     document.getElementById('info-column').style.display = 'block';
     document.getElementById('score-board').style.display = 'none'; // Skor tablosunu gizle
+    
+    // Oyun başlangıç sesini çal
+    playGirisSesi();
+    
     showNextQuestion();
     hideElement(document.getElementById('score-board'));
     resetTime();
@@ -239,12 +292,33 @@ function checkAnswer(selected, correct) {
     if (String.fromCharCode(65 + selected) === correct) {
         feedback.textContent = "Doğru!";
         feedback.style.color = "green";
+        feedback.style.fontSize = "24px";
+        feedback.style.fontWeight = "bold";
+        
+        // Son soru mu kontrol et
+        if (currentQuestionIndex === selectedQuestions.length - 1) {
+            playSonSorudakiDogruCevapSesi();
+        } else {
+            playDogruCevapSesi();
+        }
+        
         playerScore += 10;
         document.getElementById('player-score').textContent = playerScore;
-        document.getElementById('next-question').style.display = 'block';
+        
+        // Animasyon efekti ekle
+        setTimeout(() => {
+            document.getElementById('next-question').style.display = 'block';
+            document.getElementById('next-question').style.animation = 'pulse 1s infinite';
+        }, 1000);
     } else {
         feedback.textContent = "Yanlış!";
         feedback.style.color = "red";
+        feedback.style.fontSize = "24px";
+        feedback.style.fontWeight = "bold";
+        
+        // Yanlış cevap sesi çal
+        playYanlisCevapSesi();
+        
         setTimeout(() => showResult(false, playerScore), 2000);
     }
 }
@@ -254,6 +328,7 @@ function resetTime() {
     clearInterval(countdown);
     timeLeft = 30;
     isExtended = false;
+    document.getElementById('ask-friend').style.display = 'block';
     document.getElementById('ask-friend').disabled = false;
     startCountdown();
 }
@@ -274,10 +349,31 @@ function updateCountdown() {
     const countdownText = document.getElementById('countdown-text');
     const countdownCircle = document.getElementById('countdown-circle').querySelector('circle');
     countdownText.textContent = timeLeft > 0 ? timeLeft : '';
-    const totalDuration = isExtended ? 90 : 30;
+    
+    // Renk değişimi: zamanı kırmızıya çevir
+    if (timeLeft <= 10) {
+        countdownCircle.style.stroke = '#FF4444';
+        countdownText.style.fill = '#FF4444';
+        countdownText.style.fontWeight = 'bold';
+    } else if (timeLeft <= 20) {
+        countdownCircle.style.stroke = '#FFA500';
+        countdownText.style.fill = '#FFA500';
+    } else {
+        countdownCircle.style.stroke = '#4CAF50';
+        countdownText.style.fill = '#333';
+    }
+    
+    const totalDuration = isExtended ? 60 : 30;
     const circumference = 2 * Math.PI * 45;
     const offset = circumference - (timeLeft / totalDuration) * circumference;
     countdownCircle.style.strokeDashoffset = offset;
+    
+    // Son 5 saniyede titreşim efekti
+    if (timeLeft <= 5 && timeLeft > 0) {
+        document.getElementById('countdown-container').style.animation = 'shake 0.5s infinite';
+    } else {
+        document.getElementById('countdown-container').style.animation = 'none';
+    }
 }
 
 function extendTime() {
@@ -285,39 +381,36 @@ function extendTime() {
         timeLeft += 30;
         isExtended = true;
         document.getElementById('ask-friend').disabled = true;
+        document.getElementById('ask-friend').style.display = 'none';
+        
+        // Joker kullanım efekti
+        const jokerEffect = document.createElement('div');
+        jokerEffect.innerHTML = '🎯 Joker kullanıldı! +30 saniye';
+        jokerEffect.style.position = 'fixed';
+        jokerEffect.style.top = '20px';
+        jokerEffect.style.left = '50%';
+        jokerEffect.style.transform = 'translateX(-50%)';
+        jokerEffect.style.background = '#FFD700';
+        jokerEffect.style.padding = '10px 20px';
+        jokerEffect.style.borderRadius = '25px';
+        jokerEffect.style.fontWeight = 'bold';
+        jokerEffect.style.zIndex = '1000';
+        jokerEffect.style.animation = 'slideDown 3s ease-out';
+        
+        document.body.appendChild(jokerEffect);
+        
+        setTimeout(() => {
+            document.body.removeChild(jokerEffect);
+        }, 3000);
+        
         updateCountdown();
     }
 }
 
+// Arkadaşına sor butonuna event listener ekle
+document.getElementById('ask-friend').addEventListener('click', extendTime);
+
 // Oyun bittiğinde veya bir skor kaydedildiğinde skorları güncelleyen fonksiyon
-function showResult(isWin, score) {
-    setTimeout(function() {
-        const resultContainer = document.getElementById('result-container');
-        const resultMessage = document.getElementById('result-message');
-        const finalScore = document.getElementById('final-score');
-        showElement(document.getElementById('score-board'));
-        showSaveScoreOption(score); // Bu fonksiyonun çağrısını ekleyin
-
-        resultMessage.textContent = isWin ? "Tebrikler, Kazandınız!" : "Üzgünüz, Kaybettiniz!";
-        finalScore.textContent = score;
-        resultContainer.style.display = 'block';
-
-        // Sadece yeni bir skor olduğunda skor kaydetme seçeneğini göster
-        if (isWin) {
-            showSaveScoreOption(score);
-        }
-
-        document.getElementById('restart-game').onclick = function() {
-            startGame();
-        };
-
-        document.getElementById('go-home').onclick = function() {
-            window.location.href = 'index.html';
-        };
-    }, 3000);
-}
-
-
 function loadAndDisplayScores() {
     const highScoresList = document.getElementById('high-score-list');
     // localStorage'dan skorları çek, eğer yoksa boş bir dizi ata
@@ -465,8 +558,6 @@ window.onload = function() {
     scoreBoard.style.height = scoreBoardHeight;
 }
 
-let selectedQuestions = []; // Seçilen soruları saklamak için boş bir dizi
-
 function startGame() {
     currentQuestionIndex = -1;
     playerScore = 0;
@@ -488,7 +579,13 @@ function showNextQuestion() {
     currentQuestionIndex++;
     const question = selectedQuestions[currentQuestionIndex];
     const mainMenu = document.getElementById('mainMenu');
-    mainMenu.innerHTML = `<h2>${question.soru}</h2>`;
+    
+    // Soru başlangıç sesini çal
+    playSoruBaslangicSesi();
+    
+    // Soru numarasını da göster
+    mainMenu.innerHTML = `<h2>Soru ${currentQuestionIndex + 1}/10</h2><h3>${question.soru}</h3>`;
+    
     question.cevaplar.forEach((answer, i) => {
         const button = document.createElement('button');
         button.textContent = String.fromCharCode(65 + i) + ") " + answer;
@@ -534,29 +631,24 @@ function showSaveScoreOption(score) {
     // Fonksiyon içeriği burada...
 }
 document.addEventListener('DOMContentLoaded', function() {
-    var startGameButton = document.getElementById('start-game');
+    const muteButton = document.getElementById('mute-button');
+    if (muteButton) {
+        muteButton.addEventListener('click', toggleSound);
+    }
+    
+    const startGameButton = document.getElementById('start-game');
     if (startGameButton) {
         startGameButton.addEventListener('click', startGame);
-    } else {
-        console.log('Start game button not found');
     }
+    
+    const restartGameButton = document.getElementById('restart-game');
+    if (restartGameButton) {
+        restartGameButton.addEventListener('click', startGame);
+    }
+    
+    // Skorları yükle
+    loadAndDisplayScores();
 });
-function showResult(isWin, playerScore) {
-    // Oyun sonucunu gösteren diğer işlemler...
-    const resultContainer = document.getElementById('result-container');
-    const resultMessage = document.getElementById('result-message');
-    const finalScore = document.getElementById('final-score');
-
-    // Sonuç mesajını ve skoru ayarla
-    resultMessage.textContent = isWin ? "Tebrikler, Kazandınız!" : "Üzgünüz, Kaybettiniz!";
-    finalScore.textContent = playerScore;
-
-    // Sonuç ekranını göster
-    resultContainer.style.display = 'block';
-
-    // Skor kaydetme seçeneğini gösterme kontrolü
-    showSaveScoreOption(playerScore);
-}
 // Ses dosyalarını tanımla
 var dogruCevapSesi = new Audio('sounds/dogruCevapSesi.mp3');
 var girisSesi = new Audio('sounds/girisSesi.mp3');
@@ -566,21 +658,79 @@ var yanlisCevapSesi = new Audio('sounds/yanlisCevapSesi.mp3');
 
 // Ses dosyalarını oynatmak için fonksiyonlar
 function playDogruCevapSesi() {
-    dogruCevapSesi.play();
+    if (isSoundEnabled) {
+        dogruCevapSesi.currentTime = 0;
+        dogruCevapSesi.play().catch(e => console.log('Ses çalınamadı:', e));
+    }
 }
 
 function playGirisSesi() {
-    girisSesi.play();
+    if (isSoundEnabled) {
+        girisSesi.currentTime = 0;
+        girisSesi.play().catch(e => console.log('Ses çalınamadı:', e));
+    }
 }
 
 function playSonSorudakiDogruCevapSesi() {
-    sonSorudakiDogruCevapSesi.play();
+    if (isSoundEnabled) {
+        sonSorudakiDogruCevapSesi.currentTime = 0;
+        sonSorudakiDogruCevapSesi.play().catch(e => console.log('Ses çalınamadı:', e));
+    }
 }
 
 function playSoruBaslangicSesi() {
-    soruBaslangicSesi.play();
+    if (isSoundEnabled) {
+        soruBaslangicSesi.currentTime = 0;
+        soruBaslangicSesi.play().catch(e => console.log('Ses çalınamadı:', e));
+    }
 }
 
 function playYanlisCevapSesi() {
-    yanlisCevapSesi.play();
+    if (isSoundEnabled) {
+        yanlisCevapSesi.currentTime = 0;
+        yanlisCevapSesi.play().catch(e => console.log('Ses çalınamadı:', e));
+    }
+}
+
+// Oyun sonucu gösterimi iyileştirmeleri
+function showResult(isWin, playerScore) {
+    const resultContainer = document.getElementById('result-container');
+    const resultMessage = document.getElementById('result-message');
+    const finalScore = document.getElementById('final-score');
+    
+    // Animasyon efektleri
+    if (isWin) {
+        resultContainer.classList.add('victory');
+        resultMessage.textContent = "🎉 Tebrikler, Kazandınız!";
+        resultMessage.style.color = "#27AE60";
+    } else {
+        resultContainer.classList.add('game-over');
+        resultMessage.textContent = "😞 Üzgünüz, Kaybettiniz!";
+        resultMessage.style.color = "#E74C3C";
+    }
+    
+    finalScore.textContent = playerScore;
+    
+    // Skor tablosunu göster
+    showElement(document.getElementById('score-board'));
+    
+    // Sonuç ekranını göster
+    setTimeout(() => {
+        resultContainer.style.display = 'block';
+        showSaveScoreOption(playerScore);
+    }, 1000);
+    
+    // Event listener'ları ekle
+    const restartButton = document.getElementById('restart-game');
+    const goHomeButton = document.getElementById('go-home');
+    
+    restartButton.onclick = function() {
+        resultContainer.classList.remove('victory', 'game-over');
+        startGame();
+    };
+    
+    goHomeButton.onclick = function() {
+        resultContainer.classList.remove('victory', 'game-over');
+        window.location.reload();
+    };
 }
